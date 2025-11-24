@@ -2,25 +2,26 @@ const express = require("express");
 const fs = require("fs");
 const router = express.Router();
 
-const rawData = fs.readFileSync("./data/jsondata.json");
-const fullData = JSON.parse(rawData);
+const raw = fs.readFileSync("./data/jsondata.json", "utf-8");
+const fullData = JSON.parse(raw);
 
-// GET FILTERED DATA
+// GET DATA
 router.get("/data", (req, res) => {
-  let filtered = fullData;
+  try {
+    let filtered = fullData;
 
-  Object.entries(req.query).forEach(([key, value]) => {
-    if (value) {
-      filtered = filtered.filter((d) =>
-        d[key]?.toString().toLowerCase().includes(value.toLowerCase())
-      );
-    }
-  });
+    Object.entries(req.query).forEach(([key, value]) => {
+      if (value) {
+        filtered = filtered.filter((d) =>
+          d[key]?.toString().toLowerCase().includes(value.toLowerCase())
+        );
+      }
+    });
 
-  res.json({
-    success: true,
-    data: filtered,
-  });
+    res.json({ success: true, data: filtered });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
 });
 
 // GET FILTER OPTIONS
