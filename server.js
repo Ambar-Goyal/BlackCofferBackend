@@ -1,7 +1,6 @@
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
-const path = require("path");
 
 const dataRoutes = require("./routes/dataRoutes");
 
@@ -15,7 +14,7 @@ app.use(morgan("dev"));
 // Routes
 app.use("/api", dataRoutes);
 
-// Test Route
+// Health check
 app.get("/", (req, res) => {
   res.send("Backend running with local JSON data ✔");
 });
